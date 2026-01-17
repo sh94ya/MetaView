@@ -1,3 +1,5 @@
+![Supported Python versions](https://img.shields.io/badge/python-3.8+-blue.svg)
+
 ## 🚀 MetaView — Metasploit Framework Web Ui on Vue3 for Penetration Testing
 
     Веб-интерфейс для Metasploit Framework с поддержкой многопользовательской работы и интуитивным UI
