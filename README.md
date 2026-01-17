@@ -1,5 +1,9 @@
 ![Supported Python versions](https://img.shields.io/badge/python-3.8+-blue.svg)
 
+<p align="center">
+        <img alt="Static" src="https://github.com/sh94ya/MetaView/blob/main/workspace/view/icons/favicon/favicon-128x128.png?raw=true">
+</p>
+
 ## 🚀 MetaView — Metasploit Framework Web Ui on Vue3 for Penetration Testing
 
     Веб-интерфейс для Metasploit Framework с поддержкой многопользовательской работы и интуитивным UI
