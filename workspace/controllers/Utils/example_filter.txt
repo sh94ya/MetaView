@@ -1,0 +1,271 @@
+Ниже полный рабочий пример, объединяющий всё: динамические фильтры с AND/OR/NOT, поддержка фильтрации по полям связанных таблиц (через relation__field__op), автоматические left outer joins, и поддержка CIDR‑фильтра для поля address (Postgres inet) с проверкой через ipaddress.ip_network. Код предполагает наличия ORM‑моделей Host, Tag, HostTag, Service, Note, Loot и SQLAlchemy Session/engine. При необходимости подставьте свои модели и поправьте RELATION_MODELS/association join для HostTag.
+
+python
+
+from typing import Any, Dict, List, Tuple, Union
+from ipaddress import ip_network
+from sqlalchemy import and_, or_, not_, func, distinct
+from sqlalchemy.orm import aliased, Session
+from sqlalchemy.sql import ColumnElement
+from sqlalchemy import literal
+
+# Импортируйте ваши модели здесь
+# from models import Host, Tag, HostTag, Service, Note, Loot
+
+# -------------------------------
+# Настройте под ваши модели:
+# -------------------------------
+# Пример: RELATION_MODELS позволяет резолвить имена отношений, если relationship() нет,
+# или для association tables (например "tags" через HostTag).
+RELATION_MODELS = {
+    'tag': Tag,       # если есть relationship Host.tags, можно не указывать
+    'tags': Tag,
+    'service': Service,
+    'note': Note,
+    'loot': Loot,
+}
+# -------------------------------
+
+# Операторы
+OP_MAP = {
+    'eq': lambda c, v: c == v,
+    'ne': lambda c, v: c != v,
+    'lt': lambda c, v: c < v,
+    'lte': lambda c, v: c <= v,
+    'gt': lambda c, v: c > v,
+    'gte': lambda c, v: c >= v,
+    'in': lambda c, v: c.in_(v),
+    'like': lambda c, v: c.like(v),
+    'ilike': lambda c, v: c.ilike(v),
+}
+
+FilterValue = Union[Dict[str, Any], List[Any], Tuple[Any, ...], str, int, bool]
+
+# -------------------------------
+# Хелперы для резолва пути relation__field__op
+# -------------------------------
+def resolve_path_and_column(root_model, path: List[str]):
+    """
+    path: list частей без оператора, например ['tags','name'] или ['service','port']
+    Возвращает (joins, column)
+    joins: list of (alias, onclause) где alias = aliased(model)
+    column: SQLAlchemy column object (aliased if via alias)
+    """
+    if not path:
+        raise ValueError("Empty path")
+    *rels, col_name = path
+
+    current_model = root_model
+    joins: List[Tuple[Any, Any]] = []
+    alias_map = {}
+
+    for rel in rels:
+        if rel in alias_map:
+            current_model = alias_map[rel]
+            continue
+
+        # Попытка получить relationship() как атрибут модели
+        target_model = None
+        if hasattr(current_model, rel):
+            try:
+                rel_attr = getattr(current_model, rel)
+                target_model = rel_attr.property.mapper.class_
+            except Exception:
+                target_model = None
+
+        if target_model is None:
+            target_model = RELATION_MODELS.get(rel)
+            if target_model is None:
+                raise ValueError(f"Unknown relation '{rel}' on {current_model}")
+
+        alias = aliased(target_model)
+        alias_map[rel] = alias
+
+        # Попытка подставить onclause по распространённым именам FK:
+        # если alias имеет host_id -> alias.host_id == Host.id
+        # иначе если alias имеет <currentmodel>_id -> alias.<currentmodel>_id == current_model.id
+        onclause = None
+        if hasattr(alias, 'host_id') and hasattr(root_model, 'id'):
+            onclause = getattr(alias, 'host_id') == getattr(root_model, 'id')
+        else:
+            cm_lower = current_model.__name__.lower()
+            fk_name = f"{cm_lower}_id"
+            if hasattr(alias, fk_name) and hasattr(current_model, 'id'):
+                onclause = getattr(alias, fk_name) == getattr(current_model, 'id')
+        joins.append((alias, onclause))
+        current_model = alias
+
+    if not hasattr(current_model, col_name):
+        raise ValueError(f"Unknown column '{col_name}' on {current_model}")
+    column = getattr(current_model, col_name)
+    return joins, column
+
+# -------------------------------
+# CIDR helper
+# -------------------------------
+def is_cidr(val: Any) -> bool:
+    return isinstance(val, str) and ('/' in val)
+
+def validate_cidr(val: str):
+    try:
+        ip_network(val)
+    except Exception:
+        raise ValueError("Invalid CIDR value")
+
+# -------------------------------
+# Построение выражений и сбор joins
+# -------------------------------
+def build_exprs_and_joins(root_model, filters: FilterValue):
+    """
+    Возвращает tuple (expr, joins)
+    expr — SQLAlchemy BooleanElement
+    joins — список (alias, onclause)
+    Поддерживает:
+      - {"field": value, "other__op": v}  (AND)
+      - {"and": [..]}, {"or": [..]}, {"not": ..}
+      - lists treated as AND
+    """
+    joins_acc: List[Tuple[Any, Any]] = []
+
+    def accumulate_joins(js: List[Tuple[Any, Any]]):
+        for j in js:
+            if j not in joins_acc:
+                joins_acc.append(j)
+
+    def single_filter_to_expr(key: str, value) -> ColumnElement:
+        parts = key.split('__')
+        if parts[-1] in OP_MAP:
+            op = parts[-1]
+            path = parts[:-1]
+        else:
+            op = 'eq'
+            path = parts
+
+        # special-case: address field + CIDR
+        if path == ['address'] and is_cidr(value):
+            validate_cidr(value)
+            # host_address <<= network  (Postgres inet: host <<= net)
+            # Using SQLAlchemy .op to generate 'address <<= :val'
+            # для безопасности value валидирован
+            return getattr(root_model.address, 'op')('<<=')(value)
+
+        joins, column = resolve_path_and_column(root_model, path)
+        accumulate_joins(joins)
+        fn = OP_MAP.get(op)
+        if fn is None:
+            raise ValueError(f"Unknown operator '{op}'")
+        if op == 'in' and not isinstance(value, (list, tuple)):
+            raise ValueError("value for __in must be list/tuple")
+        return fn(column, value)
+
+    def recurse(filt) -> ColumnElement:
+        if filt is None:
+            return True
+        if isinstance(filt, dict):
+            # logical ops
+            if 'and' in filt and isinstance(filt['and'], (list, tuple)):
+                exprs = [recurse(x) for x in filt['and']]
+                return and_(*exprs)
+            if 'or' in filt and isinstance(filt['or'], (list, tuple)):
+                exprs = [recurse(x) for x in filt['or']]
+                return or_(*exprs)
+            if 'not' in filt:
+                return not_(recurse(filt['not']))
+            # otherwise simple dict of field->value (AND)
+            exprs = []
+            for k, v in filt.items():
+                exprs.append(single_filter_to_expr(k, v))
+            return and_(*exprs) if exprs else True
+        if isinstance(filt, (list, tuple)):
+            exprs = [recurse(x) for x in filt]
+            return and_(*exprs)
+        raise ValueError("Invalid filter structure")
+
+    expr = recurse(filters) if filters else True
+    return expr, joins_acc
+
+# -------------------------------
+# Основная функция запроса
+# -------------------------------
+def get_hosts_with_tags(session: Session, workspace_id: int, filters: FilterValue = None):
+    tags_json = func.array_agg(
+        distinct(
+            func.jsonb_build_object('id', Tag.id, 'name', Tag.name)
+        )
+    ).label('tags')
+
+    q = (
+        session.query(
+            Host.id,
+            tags_json,
+            Host.address,
+            Host.mac,
+            Host.name,
+            Host.state,
+            Host.os_family,
+            Host.os_name,
+            Host.os_flavor,
+            Host.os_sp,
+            Host.os_lang,
+            Host.arch,
+            Host.purpose,
+            Host.virtual_host,
+            Host.info,
+            Host.comments,
+        )
+        # исходные джойны (association table для tags)
+        .outerjoin(HostTag, HostTag.host_id == Host.id)
+        .outerjoin(Tag, Tag.id == HostTag.tag_id)
+        .outerjoin(Service, Service.host_id == Host.id)
+        .outerjoin(Note, Note.host_id == Host.id)
+        .outerjoin(Loot, Loot.host_id == Host.id)
+        .filter(Host.workspace_id == workspace_id)
+    )
+
+    if filters:
+        expr, joins = build_exprs_and_joins(Host, filters)
+        # применяем дополнительные джойны (из выражения)
+        for alias, onclause in joins:
+            if onclause is not None:
+                q = q.outerjoin(alias, onclause)
+            else:
+                q = q.outerjoin(alias)
+        q = q.filter(expr)
+
+    q = q.group_by(Host.id).order_by(Host.address)
+    return q.all()
+
+# -------------------------------
+# Примеры использования:
+# -------------------------------
+# sync session usage:
+# with Session(engine) as session:
+#     filters = {
+#         "and": [
+#             {"state": "active"},
+#             {"or": [
+#                 {"tags__name__eq": "db"},
+#                 {"service__port__gte": 8080}
+#             ]},
+#             {"not": {"name__ilike": "%test%"}},
+#             {"address": "192.168.0.0/24"}   # CIDR filter
+#         ]
+#     }
+#     rows = get_hosts_with_tags(session, workspace_id=9, filters=filters)
+#     for r in rows:
+#         print(r.id, r.address, r.tags)
+#
+# Примеры простых фильтров:
+# {"address": "192.168.0.1"}
+# {"arch__in": ["x86","arm"]}
+# {"or": [{"address": "192.168.0.1"}, {"address": "10.0.0.5"}]}
+
+Заметки и рекомендации:
+
+    Проверьте RELATION_MODELS и association join для HostTag; при наличии relationship() (Host.tags через secondary=HostTag) можно упростить resolve_path_and_column, используя rel_attr.property.mapper.class_.
+    Для безопасности CIDR значение валидируется через ipaddress.ip_network.
+    column.op('<<=')(value) генерирует SQL вида "address <<= :val" — это PostgreSQL‑специфично (inet). Если нужна обратная семантика, поменяйте оператор.
+    При сложных, глубоких навигациях по отношениям может потребоваться доработать onclause для корректных join‑условий; я добавил попытки угадать FK по именам (host_id, _id).
+    Для больших наборов данных используйте пагинацию или StreamingResponse на уровне веб‑фреймворка.
+
+Если предоставите определения моделей (Host, HostTag, Tag и т.д.), привяжу joins к реальным relationship() и упростю код под вашу схему.

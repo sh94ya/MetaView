@@ -1,0 +1,84 @@
+Вот пример моделей
+class VulnAttempts(Base):
+    __tablename__ = "vuln_attempts"
+
+    id = Column(Integer, primary_key=True)
+    vuln_id = Column(Integer)
+    fail_reason = Column(String)
+
+class VulnDetails(Base):
+    __tablename__ = "vuln_details"
+
+    id = Column(Integer, primary_key=True)
+    vuln_id = Column(Integer)
+    cvss_score = Column(Float)
+
+class Vulns(Base):
+    __tablename__ = "vulns"
+
+    id = Column(Integer, primary_key=True)
+    host_id = Column(Integer)
+    service_id = Column(Integer, nullable=True)
+    info = Column(String)
+
+
+class VulnsRefs(Base):
+    __tablename__ = "vulns_refs"
+
+    ref_id = Column(Integer)
+    vuln_id = Column(Integer)
+    id = Column(Integer, primary_key=True)
+	
+class Refs(Base):
+    __tablename__ = "refs"
+
+    id = Column(Integer, primary_key=True)
+    ref_id = Column(Integer)
+    name = Column(String)	
+	
+class Hosts(Base):
+    __tablename__ = "hosts"
+
+    id = Column(Integer, primary_key=True)
+    address = Column(INET, nullable=False)
+    info = Column(String)
+	workspace_id = Column(Integer, nullable=False)
+    os_family = Column(String)
+	
+class Services(Base):
+    __tablename__ = "services"
+
+    id = Column(Integer, primary_key=True)
+    host_id = Column(Integer)
+    name = Column(String)
+    info = Column(String)
+	
+class MetasploitCredentialCores(Base):
+    __tablename__ = "metasploit_credential_cores"
+
+    id = Column(Integer, primary_key=True)
+    origin_type = Column(String, nullable=False)
+    private_id = Column(Integer)
+    public_id = Column(Integer)
+    realm_id = Column(Integer)
+    workspace_id = Column(Integer, nullable=False)
+
+class MetasploitCredentialRealms(Base):
+    __tablename__ = "metasploit_credential_realms"
+
+    id = Column(Integer, primary_key=True)
+    key = Column(String, nullable=False)
+    value = Column(String, nullable=False)
+	
+class MetasploitCredentialPrivates(Base):
+    __tablename__ = "metasploit_credential_privates"
+
+    id = Column(Integer, primary_key=True)
+    type = Column(String, nullable=False)
+    data = Column(String, nullable=False)
+	
+class MetasploitCredentialPublics(Base):
+    __tablename__ = "metasploit_credential_publics"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False)

@@ -1,0 +1,61 @@
+Есть программа на python, которая выполняет запрос к БД PostgreSQL посредством SQLAlchemy.
+Напиши пример формирования динамических фильтров к этому запросу.
+Пример запроса
+        TagAlias = aliased(Tags)
+
+        tags_json = func.array_agg(
+            distinct(
+                func.jsonb_build_object('id', Tags.id, 'name', Tags.name)
+            )
+        ).label('tags')
+
+        q = (
+                db_session.query(
+                Hosts.id,
+                tags_json,
+                Hosts.address,
+                Hosts.mac,
+                Hosts.name,
+                Hosts.state,
+                Hosts.os_family,
+                Hosts.os_name,
+                Hosts.os_flavor,
+                Hosts.os_sp,
+                Hosts.os_lang,
+                Hosts.arch,
+                Hosts.purpose,
+                Hosts.virtual_host,
+                Hosts.info,
+                Hosts.comments,
+            )
+            .outerjoin(HostsTags, HostsTags.host_id == Hosts.id)
+            .outerjoin(Tags, Tags.id == HostsTags.tag_id)
+            .outerjoin(Services, Services.host_id == Hosts.id)
+            .outerjoin(Notes, Notes.host_id == Hosts.id)
+            .outerjoin(Loots, Loots.host_id == Hosts.id)
+            .outerjoin(MetasploitCredentialLogins, MetasploitCredentialLogins.service_id == Services.id)
+            .outerjoin(MetasploitCredentialCores, MetasploitCredentialCores.id == MetasploitCredentialLogins.core_id)
+            .outerjoin(MetasploitCredentialRealms, MetasploitCredentialRealms.id == MetasploitCredentialCores.realm_id)
+            .outerjoin(MetasploitCredentialPrivates, MetasploitCredentialPrivates.id == MetasploitCredentialCores.private_id)
+            .outerjoin(MetasploitCredentialPublics, MetasploitCredentialPublics.id == MetasploitCredentialCores.public_id)
+            .outerjoin(MetasploitCredentialOriginCrackedPasswords, MetasploitCredentialOriginCrackedPasswords.metasploit_credential_core_id == MetasploitCredentialCores.public_id)
+            .outerjoin(MetasploitCredentialOriginServices, MetasploitCredentialOriginServices.service_id == Services.id)
+            .outerjoin(Sessions, Sessions.host_id == Hosts.id)
+            .outerjoin(MetasploitCredentialOriginSessions, MetasploitCredentialOriginSessions.session_id == Sessions.id)
+            .outerjoin(Vulns, Vulns.id == Hosts.id)
+            .outerjoin(VulnDetails, VulnDetails.vuln_id == Vulns.id)
+            .outerjoin(VulnAttempts, VulnAttempts.vuln_id == Vulns.id)
+            .outerjoin(VulnsRefs, VulnsRefs.vuln_id == Vulns.id)
+            .outerjoin(Refs, Refs.id == VulnsRefs.ref_id)
+            .filter(Hosts.workspace_id == workspace_id)
+            .group_by(Hosts.id)
+            .order_by(Hosts.address)
+        )
+Пример входных данных (строковый фильтр):
+filter_str = "hosts.address == '192.168.0.0/24' && (creds.username == 'admin' || services.port > 22) && creds.password != 'abc'"
+
+Важное замечание:
+1. Когда в фильтре упоминается creds.password , то фильтрация должна идти по столбцу MetasploitCredentialPrivates.data, если  creds.username, то MetasploitCredentialPublics.username, если creds.realm, то MetasploitCredentialRealms.value
+2. Поле address  таблицы hosts имеет тип inet, т.е. при упоминании в строке фильтра hosts.address фильтрация данных осуществляется как по подсетям так и по отдельному адресу.
+
+Для понимания могу скинуть основные модели с основными полями.
