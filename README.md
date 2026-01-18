@@ -1,4 +1,7 @@
 ![Supported Python versions](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Vue3](https://img.shields.io/badge/vue-3+-3eaf7c.svg?style=flat-square&logo=vue.js)
+![Vue3 UI](https://img.shields.io/badge/vue3-UI-ff69b4.svg?style=flat-square&logo=vue.js)
+![MIT](https://img.shields.io/badge/license-MIT-ccc.svg?style=flat-square&logo=reliance-industries-limited)
 
 <p align="center">
         <img alt="Static" src="https://github.com/sh94ya/MetaView/blob/main/workspace/view/icons/favicon/favicon-128x128.png?raw=true">
