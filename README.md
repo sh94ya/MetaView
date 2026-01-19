@@ -46,7 +46,7 @@ cd MetaView
 pip install -r requirements.txt
 python main.py
 
-# Открываем в браузере
+# Открываем в браузере (стандартный пароль admin:admin)
 http://localhost:5000
 ```
 
