@@ -5,11 +5,17 @@ import json
 import configparser
 from flask_jwt_extended import JWTManager
 from workspace.db_connect import create_session
+import os
 
+#Config Path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(current_dir, '..', 'config.ini')
 
 app = Flask(__name__, static_folder='view/', static_url_path="/")
+
 conf = configparser.ConfigParser()
-conf.read('.\\config.ini')
+conf.read(config_path)
+
 app.config['SECRET_KEY'] = conf.get('JWT','secret_key')
 jwt = JWTManager(app)
 CORS(app)
