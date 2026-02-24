@@ -51,7 +51,7 @@ def getDataHosts (db_session: Session, workspace_id: int, arg) -> dict:
             distinct(
                 func.jsonb_build_object('id', Tags.id, 'name', Tags.name)
             )
-        ).label('tags')
+        ).filter(Tags.id.is_not(None)).label('tags')
 
         q = (
                 db_session.query(
@@ -416,8 +416,9 @@ def add_hosts(db_session: Session, workspace_id: int, data: dict):
             if 'tags' not in data:
                 log.error("Нет элемента tags во входных данных")
             else:
-                tags = {"host_id": [host.id], "tag_id": list(map(lambda x: x['id'], data["tags"]))}
-                add_tags_on_hosts(db_session, tags)
+                if(data["tags"] != None):
+                    tags = {"host_id": [host.id], "tag_id": list(map(lambda x: x['id'], data["tags"]))}
+                    add_tags_on_hosts(db_session, tags)
             db_session.commit()
             return  {'status':200, 'id': host.id, 'created_at': host.created_at.strftime("%d.%m.%Y"), 'updated_at': host.created_at.strftime("%d.%m.%Y") }
     except Exception as e:
@@ -450,9 +451,10 @@ def edit_hosts(db_session: Session, workspace_id: int, data: dict):
             if 'tags' not in data:
                 log.error("Нет элемента tags во входных данных")
             else:
-                tags = {"host_id": [data['id']], "tag_id": list(map(lambda x: x['id'], data["tags"]))}
-                remove_tags_on_hosts(db_session, data['id'])
-                add_tags_on_hosts(db_session, tags)
+                if(data["tags"] != None):
+                    tags = {"host_id": [data['id']], "tag_id": list(map(lambda x: x['id'], data["tags"]))}
+                    remove_tags_on_hosts(db_session, data['id'])
+                    add_tags_on_hosts(db_session, tags)
             db_session.commit()
             return  {'status':200, 'id': host.id, 'updated_at': host.updated_at.strftime("%d.%m.%Y") }
         else:
