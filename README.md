@@ -44,8 +44,18 @@
 git clone https://github.com/sh94ya/MetaView.git
 cd MetaView
 
-pip install -r requirements.txt
-python main.py
+#Linux
+python3 -m venv venv
+source venv/bin/activate
+pip install -e .
+python3 main.py
+
+
+#Windows
+python.exe -m venv venv
+venv\Scripts\activate.bat
+pip install -e .
+python.exe main.py
 
 # Открываем в браузере (стандартный пароль admin:admin)
 http://localhost:5000
