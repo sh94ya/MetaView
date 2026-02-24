@@ -1,4 +1,5 @@
 ![Supported Python versions](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Supported Python versions](https://img.shields.io/badge/python-3.13+-blue.svg)
 ![Vue3](https://img.shields.io/badge/vue-3+-3eaf7c.svg?style=flat-square&logo=vue.js)
 ![Vue3 UI](https://img.shields.io/badge/vue3-UI-ff69b4.svg?style=flat-square&logo=vue.js)
 ![MIT](https://img.shields.io/badge/license-MIT-ccc.svg?style=flat-square&logo=reliance-industries-limited)
