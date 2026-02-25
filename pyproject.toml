@@ -84,4 +84,4 @@ ignore_missing_imports = true
 line-length = 88
 
 [project.scripts]
-metaview = "metaview.__main__:main"
+start-app = "main:main"
