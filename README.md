@@ -10,37 +10,27 @@
 
 ## 🚀 MetaView — Metasploit Framework Web Ui on Vue3 for Penetration Testing
 
-    Веб-интерфейс для Metasploit Framework с поддержкой многопользовательской работы и интуитивным UI
+    A web-based interface for the Metasploit Framework with multi-user support and an intuitive UI.
 
-## ✨ Возможности
-🖥 Современный веб-интерфейс
+## ✨ Capabilities
+- Modern web interface
+- Visualization of data stored in the Metasploit Framework database
+- Import data from MaxPatrol, Nmap, and Acunetix
+- View the structure of websites being tested
 
-    Визуализация данных, хранящихся в БД Metasploit Framework
+## 👥 Team mode
+- Separation of roles and projects
+- Tag operation history
+- Creating tasks for project users
 
-    Импортирование данных из MaxPatrol, Nmap, Acunetix
+## 📊 Dashboards
+- Live dashboards with metrics
+- Visualization of scan results
 
-    Просмотр структуры тестируемых веб-сайтов
-
-## 👥 Многопользовательский режим
-
-    Несколько специалистов одновременно
-
-    Разделение ролей и проектов
-
-    История операций с тегами
-
-    Создание задач для пользователей проекта
-
-## 📊 Мониторинг и аналитика
-
-    Live-дашборды с метриками
-
-    Визуализация результатов сканирования
-
-## 🚀 Быстрый старт
-Локальная установка (требуется **Python 3.8 - 3.13**)
+## 🚀 Quick start
+Local installation (requires **Python 3.8 - 3.13**)
 ```bash
-# Клонируем репозиторий
+# Clone
 git clone https://github.com/sh94ya/MetaView.git
 cd MetaView
 
@@ -57,16 +47,15 @@ venv\Scripts\activate.bat
 pip install -e .
 python.exe main.py
 
-# Открываем в браузере (стандартный пароль admin:admin)
+# Open in a browser (default creds admin:admin)
 http://localhost:5000
 ```
 
-## 🔧 Конфигурация
+## 🔧 Configuration
+Edit config.ini:
 
-Отредактируйте config.ini файл:
-
-### Metasploit DB настройки
-Подключитесь к БД Metasploit Framework
+### Metasploit DB
+Connect to the PostgreSQL Database
 ```
 login=msf
 password=msf
@@ -75,48 +64,28 @@ port=5432
 db=msf
 ```
 
-### Безопасность
-Смените свой секретный ключ:
+### Security
+Change your secret key:
 ```
 secret_key = 'change-your-secret_key'
 ```
 
+## 🛠 Тechnology stack
+Flask + Vue 3 (with Quasar Framework)
 
-## 🛠 Технологический стек
-Backend
+## ⚠️ Disclaimer
+IMPORTANT: This tool is intended solely for:
+- Legal penetration testing
+- Educational purposes
+- Cybersecurity research
 
-    Flask — веб-сервер
+**The developer is not responsible for illegal use.**
 
-    PostgreSQL — хранение данных и сессий
+## 📄 License
+Distributed under the MIT License. See the LICENSE file for details.
 
-Frontend
+## 👨‍💻 Author
+sh94ya — Lead Developer — GitHub
 
-    Vue 3 + Composition API — реактивный интерфейс
-
-    Vuex — состояние приложения
-
-
-## ⚠️ Ответственность
-
-ВАЖНО: Данный инструмент предназначен исключительно для:
-
-    Легального пентестинга
-
-    Образовательных целей
-
-    Исследований в области кибербезопасности
-
-Разработчик не несет ответственности за незаконное использование.
-
-
-## 📄 Лицензия
-
-Распространяется под лицензией MIT. См. файл LICENSE для деталей.
-
-## 👨‍💻 Автор
-
-    sh94ya — Lead Developer — GitHub
-
-## 🌟 Поддержка проекта
-
-Поставьте ⭐️ на GitHub, если проект вам понравился!
+## 🌟 Support the project
+Give a ⭐️ on GitHub if you like the project!
