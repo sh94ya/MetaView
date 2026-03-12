@@ -8,7 +8,7 @@
         <img alt="Static" src="https://github.com/sh94ya/MetaView/blob/main/workspace/view/icons/favicon/favicon-128x128.png?raw=true">
 </p>
 
-## 🚀 MetaView — Metasploit Framework Web Ui on Vue3 for Penetration Testing
+## 🚀 MetaView — Metasploit Framework Web UI on Vue3 for Penetration Testing
 
     A web-based interface for the Metasploit Framework with multi-user support and an intuitive UI.
 
@@ -40,14 +40,13 @@ source venv/bin/activate
 pip install -e .
 python3 main.py
 
-
 #Windows
 python.exe -m venv venv
 venv\Scripts\activate.bat
 pip install -e .
 python.exe main.py
 
-# Open in a browser (default creds admin:admin)
+# Open in a browser (default creds - admin:admin)
 http://localhost:5000
 ```
 
