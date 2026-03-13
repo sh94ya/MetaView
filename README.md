@@ -8,7 +8,7 @@
         <img alt="Static" src="https://github.com/sh94ya/MetaView/blob/main/workspace/view/icons/favicon/favicon-128x128.png?raw=true">
 </p>
 
-## <div align="center">MetaView</br>Metasploit Framework Web UI on Vue3 for Penetration Testing</div>
+## <div align="center">MetaView</br>Metasploit Framework Web UI on Vue3</div>
 
     A web-based interface for the Metasploit Framework with multi-user support and an intuitive UI.
 
