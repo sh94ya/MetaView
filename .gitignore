@@ -1,9 +1,0 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-venv/*
-*.xls
-*.xlsx
-*.xml
-Logs.txt
