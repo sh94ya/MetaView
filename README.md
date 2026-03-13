@@ -17,6 +17,7 @@
 - Visualization of data stored in the Metasploit Framework database
 - Import data from MaxPatrol, Nmap, and Acunetix
 - View the structure of websites being tested
+![MainView](https://raw.githubusercontent.com/sh94ya/MetaView/assets/main1.png)
 
 ## 👥 Team mode
 - Separation of roles and projects
@@ -26,7 +27,7 @@
 ## 📊 Dashboards
 - Live dashboards with metrics
 - Visualization of scan results
-  ![Dashboardst](https://raw.githubusercontent.com/sh94ya/MetaView/assets/dashboards.png)
+  ![Dashboards](https://raw.githubusercontent.com/sh94ya/MetaView/assets/dashboards.png)
 
 ## 🚀 Quick start
 Local installation (requires **Python 3.8 - 3.13**)
