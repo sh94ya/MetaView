@@ -26,6 +26,7 @@
 ## 📊 Dashboards
 - Live dashboards with metrics
 - Visualization of scan results
+  ![Dashboardst](https://raw.githubusercontent.com/sh94ya/MetaView/assets/dashboards.png)
 
 ## 🚀 Quick start
 Local installation (requires **Python 3.8 - 3.13**)
