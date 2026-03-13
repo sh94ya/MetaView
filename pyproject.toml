@@ -1,0 +1,87 @@
+[project]
+name = "MetaView"
+version = "0.1.0"
+description = "Web UI for the Metasploit Framework "
+readme = "README.md"
+authors = [
+  { name = "sh94ya"}
+]
+keywords = ["metaview"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+requires-python = ">=3.8,<3.14"
+
+dependencies = [
+  "bcrypt==4.0.0",
+  "click>=8.1.8",
+  "colorama==0.4.6",
+  "Flask==2.0.3",
+  "Flask-Cors==3.0.10",
+  "Flask-JWT-Extended==4.4.4",
+  "greenlet>=3.1.1",
+  "itsdangerous==2.2.0",
+  "Jinja2==3.1.6",
+  "MarkupSafe>=2.1.5",
+  "psycopg2-binary>=2.9.3",
+  "PyJWT>=2.5.0",
+  "pyparsing>=3.1.4",
+  "python-libnmap==0.7.3",
+  "rubymarshal==1.2.10",
+  "six==1.17.0",
+  "SQLAlchemy==1.4.21",
+  "Werkzeug==2.3.8"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0.0",
+  "pytest-cov>=4.0",
+  "black>=22.0.0",
+  "isort>=5.0.0",
+  "ruff>=0.14.0",
+  "mypy>=0.900"
+]
+
+[project.urls]
+Homepage = "https://github.com/sh94ya/MetaView"
+Repository = "https://github.com/sh94ya/MetaView"
+Documentation = "https://github.com/sh94ya/MetaView#readme"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["metaview*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "metaview.__version__" }
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--strict-markers --maxfail=1 -q"
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = 3.10
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 88
+
+[project.scripts]
+start-app = "main:main"
