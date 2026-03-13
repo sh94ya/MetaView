@@ -15,7 +15,7 @@
 ## ✨ Capabilities
 - Modern web interface
 - Visualization of data stored in the Metasploit Framework database
-- Import data from MaxPatrol, Nmap, and Acunetix
+- Import data from **MaxPatrol**, **Nmap**, **Acunetix**
 - View the structure of websites being tested
 ![MainView](https://raw.githubusercontent.com/sh94ya/MetaView/assets/main1.png)
 
