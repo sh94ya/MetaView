@@ -82,7 +82,7 @@ IMPORTANT: This tool is intended solely for:
 **The developer is not responsible for illegal use.**
 
 ## 📄 License
-Distributed under the MIT License. See the LICENSE file for details.
+Distributed under the MIT License. See the [LICENSE](https://github.com/sh94ya/MetaView?tab=MIT-1-ov-file) file for details.
 
 ## 👨‍💻 Author
 sh94ya — Lead Developer — GitHub
