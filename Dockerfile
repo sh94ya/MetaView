@@ -4,4 +4,4 @@ COPY pyproject.toml .
 RUN pip install -e . 
 COPY . .
 EXPOSE 5000
-CMD ["python", "main.py"]
+CMD ["gunicorn", "--workers", "4", "--bind", "0.0.0.0:5000", "main:app"]
