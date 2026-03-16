@@ -57,6 +57,9 @@ docker build -t metaview .
 
 #Run container
 docker run -p 5000:5000 -v $(pwd)/config.ini:/app/config.ini metaview
+
+# Open in a browser (default creds - admin:admin)
+http://localhost:5000
 ```
 
 ## 🔧 Configuration
