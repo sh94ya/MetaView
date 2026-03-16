@@ -16,7 +16,7 @@
 - Visualization of data stored in the Metasploit Framework database
 - Import data from **MaxPatrol**, **Nmap**, **Acunetix**
 - View the structure of websites being tested
-![MainView](https://raw.githubusercontent.com/sh94ya/MetaView/assets/main1.png)
+![MainView](https://raw.githubusercontent.com/sh94ya/MetaView/assets/main.png)
 
 ## 👥 Team mode
 - Separation of roles and projects
