@@ -9,7 +9,10 @@
 </p>
 
 ## <div align="center">MetaView</br>Metasploit Framework Web UI on Vue3</div>
-<div align="center">A web-based interface for the Metasploit Framework with multi-user support and an intuitive UI.</div>
+<div align="center">A web-based interface for the Metasploit Framework with multi-user support and an intuitive UI.
+
+![Arch](https://raw.githubusercontent.com/sh94ya/MetaView/assets/architecture.png)
+</div>
 
 ## ✨ Capabilities
 - Modern web interface
