@@ -13,7 +13,7 @@
 
 ![Arch](https://raw.githubusercontent.com/sh94ya/MetaView/assets/architecture.png)
 </div>
-For more detailed information on setting up and using **msfdb**, you can find out <a href="https://docs.rapid7.com/metasploit/managing-the-database" target="_blank" rel="noreferrer" class="x:focus-visible:nextra-focus">here<!-- -->&nbsp;<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24" height="1em" class="x:inline x:align-baseline x:shrink-0"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg></a>.
+For more detailed information on setting up and using <b>msfdb</b>, you can find out <a href="https://docs.rapid7.com/metasploit/managing-the-database" target="_blank" rel="noreferrer" class="x:focus-visible:nextra-focus">here<!-- -->&nbsp;<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24" height="1em" class="x:inline x:align-baseline x:shrink-0"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg></a>.
 
 ## ✨ Capabilities
 - Modern web interface
