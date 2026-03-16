@@ -52,6 +52,10 @@ http://localhost:5000
 ```
 ### 🐋 Docker
 ```bash
+# Clone
+git clone https://github.com/sh94ya/MetaView.git
+cd MetaView
+
 #Build Docker Image
 docker build -t metaview .
 
