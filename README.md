@@ -29,7 +29,7 @@
   ![Dashboards](https://raw.githubusercontent.com/sh94ya/MetaView/assets/dashboards.png)
 
 ## 🚀 Quick start
-Local installation (requires **Python 3.8 - 3.13**)
+### 💻 Local installation (requires **Python 3.8 - 3.13**)
 ```bash
 # Clone
 git clone https://github.com/sh94ya/MetaView.git
@@ -50,11 +50,18 @@ python.exe main.py
 # Open in a browser (default creds - admin:admin)
 http://localhost:5000
 ```
+### 🐋 Docker
+```bash
+#Build Docker Image
+docker build -t metaview .
+
+#Run container
+docker run -p 5000:5000 -v $(pwd)/config.ini:/app/config.ini metaview
+```
 
 ## 🔧 Configuration
-Edit config.ini:
-
-### Metasploit DB
+### Edit config.ini:
+Metasploit DB
 Connect to the PostgreSQL Database
 ```
 login=msf
