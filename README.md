@@ -81,7 +81,7 @@ cd MetaView
 #Edit config.ini
 ADDRESS=db
 
-#Build and Run metaview-web and postgresql containers
+#Build and Run metaview-web and postgresql-db containers
 docker compose up --build
 
 # Open in a browser (default creds - admin:admin)
