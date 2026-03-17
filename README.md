@@ -57,6 +57,7 @@ python.exe main.py
 http://localhost:5000
 ```
 ### 🐋 Docker
+#### Single container
 ```bash
 # Clone
 git clone https://github.com/sh94ya/MetaView.git
@@ -67,6 +68,21 @@ docker build -t metaview .
 
 #Run container
 docker run -p 5000:5000 -v $(pwd)/config.ini:/app/config.ini metaview
+
+# Open in a browser (default creds - admin:admin)
+http://localhost:5000
+```
+#### Docker Compose (MetaView and PostgreSQL up)
+```bash
+# Clone
+git clone https://github.com/sh94ya/MetaView.git
+cd MetaView
+
+#Edit config.ini
+ADDRESS=db
+
+#Build and Run metaview-web and postgresql containers
+docker compose up --build
 
 # Open in a browser (default creds - admin:admin)
 http://localhost:5000
