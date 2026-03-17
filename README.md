@@ -76,18 +76,18 @@ http://localhost:5000
 ### Edit config.ini:
 Metasploit DB
 Connect to the PostgreSQL Database
-```
-login=msf
-password=msf
-address=127.0.0.1
-port=5432
-db=msf
+```config.ini
+LOGIN=msf
+PASSWORD=msf
+ADDRESS=127.0.0.1
+PORT=5432
+DATABASE=msf
 ```
 
 ### Security
 Change your secret key:
-```
-secret_key = 'change-your-secret_key'
+```config.ini
+SECRET_KEY = '<change-your-secret_key>'
 ```
 
 ## 🛠 Тechnology stack
