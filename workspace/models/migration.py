@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Float, text
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy.dialects.postgresql import INET, BYTEA
+from sqlalchemy.dialects.postgresql import INET, BYTEA, JSONB
 from sqlalchemy import MetaData
 from datetime import datetime
 
@@ -780,13 +780,14 @@ class Services(Base):
 
     id = Column(Integer, primary_key=True)
     host_id = Column(Integer)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now())
     port = Column(Integer, nullable=False)
     proto = Column(String, nullable=False)
     state = Column(String)
     name = Column(String)
     info = Column(String)
+    resource = Column(JSONB, nullable=False, default={})
 
     def __init__(self, host_id):
         self.host_id = int(host_id)
@@ -797,7 +798,27 @@ class Services(Base):
         for key in list(data.keys()):
             if (key != 'id' and hasattr(self, key)):
                 setattr(self, key, data[key])
-        self.updated_at = datetime.now() 
+        self.updated_at = datetime.now()
+
+
+class ServiceLinks(Base):
+    __tablename__ = "service_links"
+
+    id = Column(Integer, primary_key=True)
+    parent_id = Column(Integer, ForeignKey("services.id"), nullable=False)
+    child_id = Column(Integer,  ForeignKey("services.id"), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
+    updated_at = Column(DateTime, nullable=False,  default=datetime.now())
+
+    def __init__(self, parent_id, child_id):
+        self.parent_id = int(parent_id)
+        self.child_id = int(child_id)
+
+    def update_state(self, data):
+        for key in list(data.keys()):
+            if (key != 'id' and hasattr(self, key)):
+                setattr(self, key, data[key])
+        self.updated_at = datetime.now()  
 
 
 class SessionEvents(Base):
