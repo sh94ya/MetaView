@@ -16,7 +16,7 @@ app = Flask(__name__, static_folder='view/', static_url_path="/")
 conf = configparser.ConfigParser()
 conf.read(config_path)
 
-app.config['SECRET_KEY'] = conf.get('JWT','secret_key')
+app.config['SECRET_KEY'] = conf.get('JWT','SECRET_KEY')
 jwt = JWTManager(app)
 CORS(app)
 #CORS(app, supports_credentials=True, resources=r'/api/*')
