@@ -787,7 +787,7 @@ class Services(Base):
     state = Column(String)
     name = Column(String)
     info = Column(String)
-    resource = Column(JSONB, nullable=False, default={})
+    resource = Column(JSONB, default={})
 
     def __init__(self, host_id):
         self.host_id = int(host_id)
