@@ -1272,7 +1272,7 @@ class Workspaces(Base):
     boundary = Column(String)
     description = Column(String)
     owner_id = Column(Integer, default=None)
-    limit_to_network = Column(Boolean, nullable=False, default=False)
+    limit_to_network = Column(Boolean, default=False)
     import_fingerprint = Column(Boolean, default=False)
 
     def __init__(self, name):
