@@ -1020,6 +1020,7 @@ class Vulns(Base):
     vuln_attempt_count = Column(Integer, default=0)
     origin_id = Column(Integer)
     origin_type = Column(String)
+    resource = Column(JSONB, default={})
 
     def __init__(self, name):
         self.name = name
