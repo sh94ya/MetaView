@@ -41,16 +41,20 @@ For more detailed information on setting up and using <b>msfdb</b>, you can find
 git clone https://github.com/sh94ya/MetaView.git
 cd MetaView
 
-#Linux
+# Linux
 python3 -m venv venv
 source venv/bin/activate
 pip install -e .
-python3 main.py
+# Edit config.ini (See Configuration section)
+# Run
+gunicorn --workers 4 --bind 127.0.0.1:5000 main:app
 
-#Windows
+# Windows
 python.exe -m venv venv
 venv\Scripts\activate.bat
 pip install -e .
+# Edit config.ini (See Configuration section)
+# Run
 python.exe main.py
 
 # Open in a browser (default creds - admin:admin)
@@ -63,10 +67,12 @@ http://localhost:5000
 git clone https://github.com/sh94ya/MetaView.git
 cd MetaView
 
-#Build Docker Image
+# Build Docker Image
 docker build -t metaview .
 
-#Run container
+# Edit config.ini (See Configuration section)
+
+# Run container
 docker run -p 5000:5000 -v $(pwd)/config.ini:/app/config.ini metaview
 
 # Open in a browser (default creds - admin:admin)
@@ -78,10 +84,10 @@ http://localhost:5000
 git clone https://github.com/sh94ya/MetaView.git
 cd MetaView
 
-#Edit config.ini
+# Edit config.ini
 ADDRESS=db
 
-#Build and Run metaview-web and postgresql-db containers
+# Build and Run metaview-web and postgresql-db containers
 docker compose up --build
 
 # Open in a browser (default creds - admin:admin)
@@ -90,9 +96,9 @@ http://localhost:5000
 
 ## 🔧 Configuration
 ### Edit config.ini:
-Metasploit DB
-Connect to the PostgreSQL Database
+In the [DB] section of the `config.ini` file, set the data for establishing a connection to the PostgreSQL database for joint work with msfconsole.
 ```config.ini
+[DB]
 LOGIN=msf
 PASSWORD=msf
 ADDRESS=127.0.0.1
@@ -103,6 +109,7 @@ DATABASE=msf
 ### Security
 Change your secret key:
 ```config.ini
+[JWT]
 SECRET_KEY = '<change-your-secret_key>'
 ```
 
