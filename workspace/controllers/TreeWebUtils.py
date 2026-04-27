@@ -125,6 +125,8 @@ def build_tree(site: Dict[str, Any]) -> List[Dict[str, Any]]:
                 if path.endswith("/"):
                     insert(root, path, "directory")
                 else:
+                    if(len(root.children) == 0):
+                        insert(root, path, "vuln")
                     if(directory_exists(root.children['/'], path) == False):
                         insert(root, path, "vuln")
 
