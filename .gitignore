@@ -8,4 +8,5 @@ venv/*
 *.xls
 *.xlsx
 *.xml
+config.ini
 Logs.txt
