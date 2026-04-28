@@ -52,6 +52,7 @@ def parse(filename: str, workspace: int, site: int):
         if(parse_result != None):
             if('ip' in parse_result):
                 host_id = db_connect.query(Hosts.id).filter(Hosts.workspace_id == workspace, Hosts.address == parse_result['ip']).first()
+                
                 #Add Host if is't exist
                 if(host_id == None):
                     res = HostsController.add_hosts(db_connect, workspace, {'address': parse_result['ip'], 'os_family': os})
@@ -60,8 +61,15 @@ def parse(filename: str, workspace: int, site: int):
                 else:
                     host_id = host_id.id
                 parse_result['vhost'] = parse_result['ip']
+                
             else:
+                #Check if host name is exist
                 host_id = db_connect.query(Hosts.id).filter(Hosts.workspace_id == workspace, Hosts.name == parse_result['dns']).first()
+                
+                #Check if vhost is exist
+                if(host_id == None):
+                    host_id, service_id = db_connect.query(Hosts.id, Services.id).join(Services, Hosts.id == Services.host_id).join(WebSites, Services.id == WebSites.service_id).filter(Hosts.workspace_id == workspace, WebSites.vhost == parse_result['dns']).first()
+                
                 #Add Host (address 127.0.0.1) if is't exist
                 if(host_id == None):
                     #Resolve DNS Name
